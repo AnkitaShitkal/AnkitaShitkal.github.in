@@ -1,0 +1,1872 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ankita - Senior SAP ABAP Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #0b1628;
+        --navy-mid: #112240;
+        --gold: #c9a84c;
+        --gold-light: #e8c97a;
+        --cream: #faf7f0;
+        --text: #e8e4dc;
+        --muted: #8b9cb8;
+        --accent: #64ffda;
+        --accent2: #7fdbca;
+        --card: rgba(17, 34, 64, 0.7);
+        --border: rgba(201, 168, 76, 0.2);
+        --green: #1a6b3a;
+        --orange: #b85c00;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--navy);
+        color: var(--text);
+        overflow-x: hidden;
+        cursor: none;
+      }
+      .cursor {
+        position: fixed;
+        width: 12px;
+        height: 12px;
+        background: var(--gold);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition:
+          width 0.3s,
+          height 0.3s,
+          background 0.3s;
+        mix-blend-mode: screen;
+      }
+      .cursor-ring {
+        position: fixed;
+        width: 36px;
+        height: 36px;
+        border: 1.5px solid var(--gold);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition:
+          width 0.3s,
+          height 0.3s,
+          opacity 0.3s;
+        opacity: 0.6;
+      }
+      .cursor.h {
+        width: 20px;
+        height: 20px;
+        background: var(--accent);
+      }
+      .cursor-ring.h {
+        width: 56px;
+        height: 56px;
+        opacity: 0.3;
+      }
+      #bgc {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.45;
+      }
+      .progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold), var(--accent));
+        z-index: 1000;
+        width: 0;
+        transition: width 0.1s;
+      }
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 1.2rem 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition:
+          background 0.4s,
+          padding 0.4s;
+      }
+      nav.sc {
+        background: rgba(11, 22, 40, 0.93);
+        backdrop-filter: blur(16px);
+        padding: 0.9rem 2.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .logo {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--gold);
+        letter-spacing: 0.05em;
+        text-decoration: none;
+      }
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+      .nav-links a {
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-decoration: none;
+        font-weight: 400;
+        transition: color 0.3s;
+        position: relative;
+      }
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--gold);
+        transition: width 0.3s;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--gold);
+      }
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+      .ham {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 4px;
+        z-index: 200;
+      }
+      .ham span {
+        width: 24px;
+        height: 2px;
+        background: var(--gold);
+        transition: all 0.3s;
+        display: block;
+      }
+      .ham.open span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+      .ham.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .ham.open span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+      .mob {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(11, 22, 40, 0.97);
+        backdrop-filter: blur(20px);
+        z-index: 150;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2.5rem;
+      }
+      .mob.open {
+        display: flex;
+      }
+      .mob a {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 2.5rem;
+        font-weight: 300;
+        color: var(--text);
+        text-decoration: none;
+        transition: color 0.3s;
+        opacity: 0;
+        animation: fsu 0.5s forwards;
+      }
+      .mob a:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .mob a:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .mob a:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .mob a:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .mob a:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .mob a:nth-child(6) {
+        animation-delay: 0.3s;
+      }
+      .mob a:hover {
+        color: var(--gold);
+      }
+      #hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6rem 2rem 4rem;
+        position: relative;
+        z-index: 1;
+      }
+      .hero-inner {
+        max-width: 900px;
+        text-align: center;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px solid var(--border);
+        padding: 0.4rem 1.2rem;
+        border-radius: 100px;
+        font-size: 0.72rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 2rem;
+        background: rgba(201, 168, 76, 0.07);
+        opacity: 0;
+        animation: fsu 0.8s 0.2s forwards;
+      }
+      .badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: pulse 2s infinite;
+      }
+      .hero-name {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(3.5rem, 9vw, 7.5rem);
+        font-weight: 300;
+        line-height: 1;
+        letter-spacing: -0.01em;
+        color: var(--cream);
+        margin-bottom: 0.4rem;
+        opacity: 0;
+        animation: fsu 0.9s 0.35s forwards;
+      }
+      .hero-name em {
+        font-style: italic;
+        color: var(--gold);
+      }
+      .hero-title {
+        font-family: "DM Mono", monospace;
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 1.8rem;
+        opacity: 0;
+        animation: fsu 0.9s 0.5s forwards;
+      }
+      .hero-desc {
+        font-size: clamp(1rem, 2.5vw, 1.2rem);
+        font-weight: 300;
+        color: var(--text);
+        line-height: 1.75;
+        max-width: 640px;
+        margin: 0 auto 2.5rem;
+        opacity: 0;
+        animation: fsu 0.9s 0.65s forwards;
+      }
+      .hero-desc strong {
+        color: var(--gold-light);
+        font-weight: 500;
+      }
+      .cta {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        opacity: 0;
+        animation: fsu 0.9s 0.8s forwards;
+      }
+      .btn-p {
+        padding: 0.85rem 2rem;
+        border-radius: 4px;
+        background: var(--gold);
+        color: var(--navy);
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.3s;
+        border: none;
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-p::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+      .btn-p:hover::before {
+        left: 100%;
+      }
+      .btn-p:hover {
+        background: var(--gold-light);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(201, 168, 76, 0.35);
+      }
+      .btn-o {
+        padding: 0.85rem 2rem;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.3s;
+        background: transparent;
+      }
+      .btn-o:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        transform: translateY(-2px);
+      }
+      .scroll-ind {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0;
+        animation: fsu 1s 1.2s forwards;
+      }
+      .scroll-ind span {
+        font-size: 0.65rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .scroll-line {
+        width: 1px;
+        height: 50px;
+        background: linear-gradient(to bottom, var(--gold), transparent);
+        animation: float 2s infinite;
+      }
+      .stats-strip {
+        position: relative;
+        z-index: 1;
+        background: rgba(17, 34, 64, 0.5);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+      }
+      .stats-grid {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        text-align: center;
+      }
+      .stat-num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+        font-weight: 600;
+        color: var(--gold);
+        line-height: 1;
+      }
+      .stat-lbl {
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 0.4rem;
+      }
+      section {
+        position: relative;
+        z-index: 1;
+        padding: clamp(4rem, 8vw, 7rem) 2rem;
+      }
+      .si {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .stag {
+        font-family: "DM Mono", monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+      .stag::before {
+        content: "";
+        width: 40px;
+        height: 1px;
+        background: var(--accent);
+      }
+      .stit {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-weight: 300;
+        color: var(--cream);
+        line-height: 1.15;
+        margin-bottom: 1rem;
+      }
+      .stit em {
+        font-style: italic;
+        color: var(--gold);
+      }
+      .ssub {
+        font-size: clamp(0.9rem, 2vw, 1.05rem);
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 560px;
+        margin-bottom: 3.5rem;
+      }
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: start;
+      }
+      .about-text p {
+        font-size: 1rem;
+        line-height: 1.85;
+        color: var(--text);
+        margin-bottom: 1.2rem;
+        font-weight: 300;
+      }
+      .about-text p strong {
+        color: var(--gold-light);
+        font-weight: 500;
+      }
+      .hl-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .hlc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--gold);
+        padding: 1.2rem 1.4rem;
+        border-radius: 4px;
+        backdrop-filter: blur(10px);
+        transition:
+          transform 0.3s,
+          border-color 0.3s,
+          box-shadow 0.3s;
+      }
+      .hlc:hover {
+        transform: translateX(6px);
+        border-left-color: var(--accent);
+        box-shadow: -6px 0 20px rgba(100, 255, 218, 0.1);
+      }
+      .hlc h4 {
+        font-size: 0.78rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.4rem;
+      }
+      .hlc p {
+        font-size: 0.92rem;
+        color: var(--text);
+        line-height: 1.5;
+      }
+      #skills {
+        background: rgba(17, 34, 64, 0.3);
+      }
+      .sk-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+      .skc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.8rem;
+        backdrop-filter: blur(10px);
+        transition:
+          transform 0.3s,
+          border-color 0.3s,
+          box-shadow 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+      .skc::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold), var(--accent));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s;
+      }
+      .skc:hover {
+        transform: translateY(-4px);
+        border-color: rgba(201, 168, 76, 0.4);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+      .skc:hover::before {
+        transform: scaleX(1);
+      }
+      .skc-icon {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .skc h3 {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--cream);
+        margin-bottom: 1rem;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .tag {
+        font-size: 0.72rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 2px;
+        letter-spacing: 0.05em;
+        transition: all 0.2s;
+      }
+      .tag.p {
+        background: rgba(201, 168, 76, 0.15);
+        color: var(--gold-light);
+        border: 1px solid rgba(201, 168, 76, 0.3);
+      }
+      .tag.s {
+        background: rgba(100, 255, 218, 0.07);
+        color: var(--accent2);
+        border: 1px solid rgba(100, 255, 218, 0.2);
+      }
+      .tag:hover {
+        transform: scale(1.05);
+      }
+      .timeline {
+        position: relative;
+        padding-left: 2rem;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: linear-gradient(to bottom, var(--gold), transparent);
+      }
+      .tli {
+        position: relative;
+        margin-bottom: 3rem;
+        padding-left: 1.5rem;
+        opacity: 0;
+        transform: translateX(-20px);
+        transition:
+          opacity 0.6s,
+          transform 0.6s;
+      }
+      .tli.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .tldot {
+        position: absolute;
+        left: -2.25rem;
+        top: 0.35rem;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--gold);
+        border: 2px solid var(--navy);
+        box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.3);
+      }
+      .tlperiod {
+        font-family: "DM Mono", monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 0.4rem;
+      }
+      .tlrole {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--cream);
+        margin-bottom: 0.2rem;
+      }
+      .tlco {
+        font-size: 0.88rem;
+        color: var(--gold-light);
+        margin-bottom: 1rem;
+      }
+      .tla {
+        list-style: none;
+      }
+      .tla li {
+        font-size: 0.92rem;
+        color: var(--text);
+        line-height: 1.65;
+        margin-bottom: 0.6rem;
+        padding-left: 1.2rem;
+        position: relative;
+      }
+      .tla li::before {
+        content: "▹";
+        position: absolute;
+        left: 0;
+        color: var(--gold);
+        font-size: 0.8rem;
+        top: 0.05rem;
+      }
+      .tla li strong {
+        color: var(--gold-light);
+      }
+      .pbadge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(201, 168, 76, 0.12);
+        border: 1px solid rgba(201, 168, 76, 0.3);
+        color: var(--gold);
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.25rem 0.7rem;
+        border-radius: 100px;
+        margin-bottom: 0.8rem;
+      }
+      #certifications {
+        background: rgba(17, 34, 64, 0.3);
+      }
+      .cert-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1rem;
+      }
+      .cert {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 1.4rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        transition: all 0.3s;
+        backdrop-filter: blur(8px);
+      }
+      .cert:hover {
+        transform: translateY(-3px);
+        border-color: var(--gold);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      }
+      .cico {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+      }
+      .cico.sap {
+        background: rgba(201, 168, 76, 0.15);
+      }
+      .cico.gcp {
+        background: rgba(66, 133, 244, 0.15);
+      }
+      .cico.aws {
+        background: rgba(255, 153, 0, 0.15);
+      }
+      .cico.gh {
+        background: rgba(100, 255, 218, 0.12);
+      }
+      .cbody {
+        flex: 1;
+        min-width: 0;
+      }
+      .cbody h4 {
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: var(--cream);
+        line-height: 1.35;
+        margin-bottom: 0.25rem;
+      }
+      .cbody span {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+      .ach-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+      .ach {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s;
+        backdrop-filter: blur(10px);
+      }
+      .ach::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 120px;
+        height: 120px;
+        background: radial-gradient(
+          circle,
+          rgba(201, 168, 76, 0.08),
+          transparent 70%
+        );
+        border-radius: 50%;
+      }
+      .ach:hover {
+        transform: translateY(-5px);
+        border-color: var(--gold);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      }
+      .ach-num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+      }
+      .ach-num span {
+        font-size: 1.5rem;
+        font-weight: 300;
+      }
+      .ach-lbl {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--cream);
+        margin-bottom: 0.5rem;
+      }
+      .ach-desc {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .qsec {
+        text-align: center;
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 5rem 2rem;
+      }
+      .qmark {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 8rem;
+        line-height: 0.5;
+        color: var(--gold);
+        opacity: 0.3;
+        margin-bottom: -1rem;
+        display: block;
+      }
+      .qtxt {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(1.3rem, 3vw, 1.9rem);
+        font-weight: 300;
+        font-style: italic;
+        color: var(--cream);
+        line-height: 1.65;
+        margin-bottom: 1.5rem;
+      }
+      .qtxt strong {
+        font-style: normal;
+        font-weight: 600;
+        color: var(--gold);
+      }
+      #relocation {
+        background: rgba(17, 34, 64, 0.3);
+      }
+      .cc-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+      .cc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 1.2rem 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        transition: all 0.3s;
+        backdrop-filter: blur(8px);
+      }
+      .cc:hover {
+        border-color: var(--gold);
+        transform: translateY(-2px);
+      }
+      .cflag {
+        font-size: 1.6rem;
+        flex-shrink: 0;
+      }
+      .cinfo h4 {
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: var(--cream);
+      }
+      .cinfo span {
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
+      .cpri {
+        margin-left: auto;
+        font-size: 0.6rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.5rem;
+        border-radius: 100px;
+      }
+      .pri-h {
+        background: rgba(100, 255, 218, 0.12);
+        color: var(--accent);
+        border: 1px solid rgba(100, 255, 218, 0.25);
+      }
+      .pri-m {
+        background: rgba(201, 168, 76, 0.1);
+        color: var(--gold);
+        border: 1px solid rgba(201, 168, 76, 0.25);
+      }
+      #contact {
+        text-align: center;
+      }
+      .ct-inner {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .ct-inner p {
+        font-size: 1rem;
+        color: var(--muted);
+        line-height: 1.7;
+        margin-bottom: 2.5rem;
+      }
+      .ct-links {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .ctlnk {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.8rem 1.5rem;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+        color: var(--text);
+        text-decoration: none;
+        font-size: 0.82rem;
+        transition: all 0.3s;
+        letter-spacing: 0.05em;
+      }
+      .ctlnk:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        transform: translateY(-2px);
+      }
+      footer {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid var(--border);
+        padding: 2rem;
+        text-align: center;
+        font-size: 0.78rem;
+        color: var(--muted);
+        letter-spacing: 0.05em;
+      }
+      footer span {
+        color: var(--gold);
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.7s,
+          transform 0.7s;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .d1 {
+        transition-delay: 0.1s;
+      }
+      .d2 {
+        transition-delay: 0.2s;
+      }
+      .d3 {
+        transition-delay: 0.3s;
+      }
+      .d4 {
+        transition-delay: 0.4s;
+      }
+      .divider {
+        max-width: 1100px;
+        margin: 0 auto;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--border),
+          transparent
+        );
+      }
+      @keyframes fsu {
+        from {
+          opacity: 0;
+          transform: translateY(25px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.5);
+        }
+        50% {
+          opacity: 0.7;
+          box-shadow: 0 0 0 6px rgba(100, 255, 218, 0);
+        }
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      @media (max-width: 900px) {
+        .about-grid {
+          grid-template-columns: 1fr;
+          gap: 2.5rem;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .nav-links {
+          display: none;
+        }
+        .ham {
+          display: flex;
+        }
+        body {
+          cursor: auto;
+        }
+        .cursor,
+        .cursor-ring {
+          display: none;
+        }
+        .timeline {
+          padding-left: 1.2rem;
+        }
+        .tldot {
+          left: -1.5rem;
+        }
+      }
+      @media (max-width: 600px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .cta {
+          flex-direction: column;
+          align-items: center;
+        }
+        .btn-p,
+        .btn-o {
+          width: 100%;
+          max-width: 280px;
+          text-align: center;
+        }
+        .ct-links {
+          flex-direction: column;
+          align-items: center;
+        }
+        .ctlnk {
+          width: 100%;
+          max-width: 280px;
+          justify-content: center;
+        }
+        nav {
+          padding: 1rem 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress-bar" id="pb"></div>
+    <canvas id="bgc"></canvas>
+    <div class="cursor" id="cur"></div>
+    <div class="cursor-ring" id="ring"></div>
+
+    <nav id="nav">
+      <a href="#hero" class="logo">A.</a>
+      <ul class="nav-links" id="nl">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#certifications">Certifications</a></li>
+        <li><a href="#achievements">Impact</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="ham" id="ham"><span></span><span></span><span></span></div>
+    </nav>
+
+    <div class="mob" id="mob">
+      <a href="#about" onclick="cm()">About</a>
+      <a href="#skills" onclick="cm()">Skills</a>
+      <a href="#experience" onclick="cm()">Experience</a>
+      <a href="#certifications" onclick="cm()">Certifications</a>
+      <a href="#achievements" onclick="cm()">Impact</a>
+      <a href="#contact" onclick="cm()">Contact</a>
+    </div>
+
+    <section id="hero">
+      <div class="hero-inner">
+        <div class="badge">Available for International Relocation</div>
+        <h1 class="hero-name"><em>Ankita Shitkal</em></h1>
+        <h2 class="hero-title"><em>Senior SAP ABAP Developer </em></h2>
+        <p class="hero-title">
+          &nbsp;·&nbsp; IS-U Billing &nbsp;·&nbsp; FICA &nbsp;·&nbsp; BOV
+          &nbsp;·&nbsp; ABAP Cloud &nbsp;·&nbsp; Fiori &nbsp;·&nbsp;
+        </p>
+        <p class="hero-desc">
+          <strong>5 years</strong> engineering the systems that keep utility
+          companies running - billing engines, contract accounting, and revenue
+          operations at scale. Specialising in the rarest corner of SAP.
+          <!--<p class="hero-desc"><strong>Twice promoted.</strong></p>
+          <p class="hero-desc"><strong>9 certifications.</strong></p> -->
+        </p>
+        <div class="cta">
+          <a href="#achievements" class="btn-p">See My Impact</a>
+          <a href="#contact" class="btn-o">Get in Touch</a>
+        </div>
+      </div>
+      <div class="scroll-ind">
+        <span></span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <div class="stats-strip">
+      <div class="stats-grid">
+        <div class="reveal">
+          <div class="stat-num" data-t="5">0</div>
+          <div class="stat-lbl">Years SAP Experience</div>
+        </div>
+        <div class="reveal d1">
+          <div class="stat-num" data-t="9">0</div>
+          <div class="stat-lbl">Certifications Earned</div>
+        </div>
+        <div class="reveal d2">
+          <div class="stat-num" data-t="2" data-sfx="×">0</div>
+          <div class="stat-lbl">Promotions</div>
+        </div>
+        <div class="reveal d3">
+          <div class="stat-num" data-t="1" data-pfx="" data-sfx="M+ invoices">
+            0
+          </div>
+          <div class="stat-lbl">Per Billing Cycle</div>
+        </div>
+      </div>
+    </div>
+
+    <section id="about">
+      <div class="si">
+        <p class="stag">Who I Am</p>
+        <h2 class="stit">
+          Utility billing expert.<br /><em>Cloud-certified engineer.</em>
+        </h2>
+        <div class="about-grid">
+          <div class="about-text reveal">
+            <p>
+              I am a <strong>Senior SAP ABAP Developer</strong> specialising in
+              the systems that power utility companies' revenue - SAP IS-U
+              Billing, FICA (Contract Accounting), and BOV. Over five years I
+              have worked across the complete meter-to-cash process, from
+              billing engine design to FICA dunning automation.
+            </p>
+            <p>
+              What makes my profile unusual: IS-U and FICA expertise is
+              genuinely rare globally. Most SAP ABAP developers have never
+              touched a billing engine. I have built and maintained them at
+              scale -
+              <strong
+                >processing over one million invoices per billing cycle</strong
+              >
+              for large utility clients.
+            </p>
+            <p>
+              Beyond core SAP, I hold certifications in
+              <strong
+                >SAP Fiori, ABAP Cloud, Google Cloud, AWS, and GitHub
+                Copilot</strong
+              >
+              - reflecting my commitment to staying at the forefront of where
+              SAP is headed: Clean Core, BTP, and AI-augmented development.
+            </p>
+            <p>
+              I am actively pursuing
+              <strong>international relocation</strong> across Germany,
+              Switzerland, UAE, UK, Ireland, Australia, New Zealand, and the
+              Netherlands.
+            </p>
+          </div>
+          <div class="hl-cards">
+            <div class="hlc reveal d1">
+              <h4>🏆 Core Specialisation</h4>
+              <p>
+                SAP IS-U Billing · FICA Contract Accounting · BOV - the
+                meter-to-cash process that generates revenue for utility
+                companies
+              </p>
+            </div>
+            <div class="hlc reveal d2">
+              <h4>🚀 Career Trajectory</h4>
+              <p>
+                Junior Developer → ABAP Developer → Senior ABAP Developer -
+                twice promoted within the same organisation in 4 years
+              </p>
+            </div>
+            <div class="hlc reveal d3">
+              <h4>☁️ Cloud & AI Ready</h4>
+              <p>
+                SAP ABAP Cloud certified + 7 hyperscaler certifications (GCP,
+                AWS) + GitHub Copilot - ready for BTP-first SAP programmes
+              </p>
+            </div>
+            <div class="hlc reveal d4">
+              <h4>🌏 Globally Mobile</h4>
+              <p>
+                Actively seeking relocation across Europe, Middle East and APAC
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section id="skills">
+      <div class="si">
+        <p class="stag">Technical Profile</p>
+        <h2 class="stit">What I bring<br /><em>to your project.</em></h2>
+        <p class="ssub">
+          A rare combination of deep SAP IS-U domain expertise and modern
+          cloud-native capabilities - built over 5 years of enterprise delivery.
+        </p>
+        <div class="sk-grid">
+          <div class="skc reveal">
+            <span class="skc-icon">⚡</span>
+            <h3>SAP IS-U & Utilities</h3>
+            <div class="tags">
+              <span class="tag p">IS-U Billing Engine</span
+              ><span class="tag p">FICA Contract Accounting</span
+              ><span class="tag p">BOV / Budget Billing</span
+              ><span class="tag p">Billing Schema Design</span
+              ><span class="tag s">Rate Determination</span
+              ><span class="tag s">Move-In / Move-Out</span
+              ><span class="tag s">Device Management</span
+              ><span class="tag s">Dunning & Collections</span
+              ><span class="tag s">Mass Billing Runs</span>
+            </div>
+          </div>
+          <div class="skc reveal d1">
+            <span class="skc-icon">💻</span>
+            <h3>ABAP Development</h3>
+            <div class="tags">
+              <span class="tag p">ABAP OO</span
+              ><span class="tag p">ABAP Cloud / RAP</span
+              ><span class="tag p">CDS Views</span
+              ><span class="tag p">BAdIs & User Exits</span
+              ><span class="tag s">ALV Reports</span
+              ><span class="tag s">Adobe Forms</span
+              ><span class="tag s">IDoc / RFC / ALE</span
+              ><span class="tag s">SmartForms</span
+              ><span class="tag s">OData / Fiori Backend</span
+              ><span class="tag s">SAP SD / MM</span>
+            </div>
+          </div>
+          <div class="skc reveal d2">
+            <span class="skc-icon">☁️</span>
+            <h3>Cloud & BTP</h3>
+            <div class="tags">
+              <span class="tag p">SAP BTP</span
+              ><span class="tag p">Google Cloud (Architect)</span
+              ><span class="tag p">AWS Developer</span
+              ><span class="tag s">SAP Fiori / SAPUI5</span
+              ><span class="tag s">Eclipse ADT / BAS</span
+              ><span class="tag s">GitHub Copilot</span
+              ><span class="tag s">Generative AI</span
+              ><span class="tag s">Clean Core</span>
+            </div>
+          </div>
+          <div class="skc reveal d3">
+            <span class="skc-icon">🔧</span>
+            <h3>Delivery & Methods</h3>
+            <div class="tags">
+              <span class="tag p">SAP Activate / Agile</span
+              ><span class="tag s">ABAP Unit Testing</span
+              ><span class="tag s">QTest</span
+              ><span class="tag s">ServiceNow</span
+              ><span class="tag s">SAP Transport Management System</span
+              ><span class="tag s">SAP Solution Manager</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience">
+      <div class="si">
+        <p class="stag">Career Journey</p>
+        <h2 class="stit">
+          From first commit<br /><em>to leading delivery.</em>
+        </h2>
+        <p class="ssub">
+          Five years of consistent growth - from junior developer to leading
+          IS-U billing programmes for large utility clients.
+        </p>
+        <div class="timeline">
+          <div class="tli">
+            <div class="tldot"></div>
+            <div class="tlperiod">Dec 2024 – Present</div>
+            <div class="pbadge">🏆 Promoted to Senior</div>
+            <div class="tlrole">Senior SAP ABAP Developer</div>
+            <div class="tlco">Accenture · India</div>
+            <ul class="tla">
+              <li>
+                Architected IS-U Billing enhancements using ABAP OO,
+                <strong>reducing monthly billing run time by ~30%</strong> for a
+                500,000+ account utility client
+              </li>
+              <li>
+                Designed FICA dunning customisations that
+                <strong>eliminated ~200 manual interventions per month</strong>,
+                improving collection efficiency by 25%
+              </li>
+              <li>
+                Led BOV configuration for a new tariff structure, enabling
+                <strong>3 new rate categories with zero system downtime</strong>
+              </li>
+              <li>
+                Built reusable ABAP Clean Core modules on SAP BTP,
+                <strong>reducing future development effort by ~40%</strong>
+              </li>
+              <li>
+                Mentored 3 junior ABAP developers in IS-U best practices and
+                Clean Core standards
+              </li>
+              <li>
+                Delivered across Agile sprints using SAP Activate methodology
+              </li>
+            </ul>
+          </div>
+          <div class="tli">
+            <div class="tldot"></div>
+            <div class="tlperiod">Sep 2022 – Nov 2024</div>
+            <div class="pbadge">🏆 Promoted to ABAP Developer</div>
+            <div class="tlrole">SAP ABAP Developer</div>
+            <div class="tlco">Accenture · India</div>
+            <ul class="tla">
+              <li>
+                Developed custom ALV reports, SmartForms, and Adobe Forms for
+                IS-U billing statements,
+                <strong>reducing report generation time by 15%</strong>
+              </li>
+              <li>
+                Implemented IDoc and RFC-based ALE/EDI interfaces for utility
+                billing data exchange with third-party meter reading systems
+              </li>
+              <li>
+                Enhanced FICA clearing routines via BAdI,
+                <strong
+                  >resolving a critical reconciliation issue affecting 12,000+
+                  accounts</strong
+                >
+              </li>
+              <li>
+                Promoted within 12 months based on technical excellence and
+                delivery quality
+              </li>
+            </ul>
+          </div>
+          <div class="tli">
+            <div class="tldot"></div>
+            <div class="tlperiod">July 2021 – Aug 2022</div>
+            <div class="tlrole">Junior SAP ABAP Developer</div>
+            <div class="tlco">Accenture · India</div>
+            <ul class="tla">
+              <li>
+                Built ABAP reports and enhancements in
+                <strong>SAP SD and SAP MM</strong> for order management and
+                procurement workflows
+              </li>
+              <li>
+                Implemented user exits for sales order validations,
+                <strong>reducing erroneous orders by ~10%</strong>
+              </li>
+              <li>
+                Participated in full SDLC: unit testing, SIT, UAT - documenting
+                test cases in QTest
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section id="certifications">
+      <div class="si">
+        <p class="stag">Credentials</p>
+        <h2 class="stit">
+          <em>9 Certifications</em><br />across SAP and Cloud.
+        </h2>
+        <p class="ssub">
+          A deliberate investment in staying ahead - from SAP's newest ABAP
+          Cloud model to Generative AI leadership on Google Cloud.
+        </p>
+        <div class="cert-grid">
+          <div class="cert reveal">
+            <div class="cico sap">🔷</div>
+            <div class="cbody">
+              <h4>SAP Certified - Fiori Application Developer</h4>
+              <span>SAP SE · Active</span>
+            </div>
+          </div>
+          <div class="cert reveal d1">
+            <div class="cico sap">🔷</div>
+            <div class="cbody">
+              <h4>SAP Certified - ABAP Cloud Developer</h4>
+              <span>SAP SE · Active</span>
+            </div>
+          </div>
+          <div class="cert reveal d2">
+            <div class="cico gcp">🔵</div>
+            <div class="cbody">
+              <h4>Professional Cloud Architect</h4>
+              <span>Google Cloud · Active</span>
+            </div>
+          </div>
+          <div class="cert reveal d3">
+            <div class="cico gcp">🔵</div>
+            <div class="cbody">
+              <h4>Associate Cloud Engineer</h4>
+              <span>Google Cloud · Active</span>
+            </div>
+          </div>
+          <div class="cert reveal">
+            <div class="cico gcp">🔵</div>
+            <div class="cbody">
+              <h4>Cloud Digital Leader</h4>
+              <span>Google Cloud · Active</span>
+            </div>
+          </div>
+          <div class="cert reveal d1">
+            <div class="cico gcp">🔵</div>
+            <div class="cbody">
+              <h4>Generative AI Leader</h4>
+              <span>Google Cloud · Active</span>
+            </div>
+          </div>
+          <div class="cert reveal d2">
+            <div class="cico gcp">🔵</div>
+            <div class="cbody">
+              <h4>Associate Data Practitioner</h4>
+              <span>Google Cloud · Active</span>
+            </div>
+          </div>
+          <div class="cert reveal d3">
+            <div class="cico aws">🟠</div>
+            <div class="cbody">
+              <h4>Developer - Associate</h4>
+              <span>Amazon Web Services · Active</span>
+            </div>
+          </div>
+          <div class="cert reveal">
+            <div class="cico gh">⬛</div>
+            <div class="cbody">
+              <h4>GitHub Copilot Certified</h4>
+              <span>GitHub · Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="achievements">
+      <div class="si">
+        <p class="stag">Measurable Impact</p>
+        <h2 class="stit">Numbers that<br /><em>speak for themselves.</em></h2>
+        <p class="ssub">
+          Every line of code connects to a business outcome. Here are the ones I
+          am most proud of.
+        </p>
+        <div class="ach-grid">
+          <div class="ach reveal">
+            <div class="ach-num">30<span>%</span></div>
+            <div class="ach-lbl">Faster Billing Runs</div>
+            <div class="ach-desc">
+              Reduced monthly billing run time for a 500,000+ account utility
+              client through ABAP OO enhancements to the IS-U billing engine.
+            </div>
+          </div>
+          <div class="ach reveal d1">
+            <div class="ach-num">200<span>/mo</span></div>
+            <div class="ach-lbl">Manual Interventions Eliminated</div>
+            <div class="ach-desc">
+              Automated FICA dunning via BAdI customisations, cutting 200+
+              manual collections interventions per month and improving on-time
+              payment rates by 25%.
+            </div>
+          </div>
+          <div class="ach reveal d2">
+            <div class="ach-num">1M<span>+</span></div>
+            <div class="ach-lbl">Invoices Per Cycle</div>
+            <div class="ach-desc">
+              Led ABAP development for a billing engine overhaul processing over
+              1 million invoices per billing cycle across 12 custom billing
+              routines.
+            </div>
+          </div>
+          <div class="ach reveal d3">
+            <div class="ach-num">40<span>%</span></div>
+            <div class="ach-lbl">Development Effort Saved</div>
+            <div class="ach-desc">
+              Built reusable ABAP Clean Core modules on SAP BTP, reducing
+              downstream development effort by ~40% for billing-adjacent
+              processes.
+            </div>
+          </div>
+          <div class="ach reveal">
+            <div class="ach-num">12K<span>+</span></div>
+            <div class="ach-lbl">Accounts Fixed</div>
+            <div class="ach-desc">
+              Resolved a critical FICA reconciliation issue affecting 12,000+
+              accounts - deployed with zero production downtime.
+            </div>
+          </div>
+          <div class="ach reveal d1">
+            <div class="ach-num">3<span> new</span></div>
+            <div class="ach-lbl">Tariff Categories</div>
+            <div class="ach-desc">
+              Extended BOV configuration to support 3 new rate categories for a
+              live billing system - delivered mid-cycle with zero downtime.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div
+      style="position: relative; z-index: 1; background: rgba(17, 34, 64, 0.4)"
+    >
+      <!--<div class="qsec reveal">
+        <span class="qmark">"</span>
+        <p class="qtxt">
+          SAP IS-U and FICA expertise is genuinely rare. Most SAP developers
+          have never touched a billing engine. I have built, optimised, and
+          maintained them at scale - and I bring that depth alongside
+          <strong
+            >the cloud and AI skills that define where SAP is heading</strong
+          >.
+        </p>
+        <div
+          style="
+            font-size: 0.78rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+          "
+        >
+          Ankita &nbsp;·&nbsp; Senior SAP ABAP Developer
+        </div>
+      </div> -->
+    </div>
+
+    <section id="relocation">
+      <div class="si">
+        <p class="stag">Open to Opportunities</p>
+        <h2 class="stit">Ready to relocate.<br /><em>Globally.</em></h2>
+        <p class="ssub">
+          Actively seeking senior SAP ABAP developer and consultant roles
+          internationally. Open to employer visa sponsorship across all listed
+          markets.
+        </p>
+        <div class="cc-grid">
+          <div class="cc reveal">
+            <div class="cflag">🇩🇪</div>
+            <div class="cinfo">
+              <h4>Germany</h4>
+              <span>EU Blue Card</span>
+            </div>
+            <!-- <span class="cpri pri-h">Priority</span> -->
+          </div>
+          <div class="cc reveal d3">
+            <div class="cflag">🇨🇭</div>
+            <div class="cinfo">
+              <h4>Switzerland</h4>
+              <span>Work Permit</span>
+            </div>
+            <!-- <span class="cpri pri-h">Priority</span> -->
+          </div>
+          <div class="cc reveal d2">
+            <div class="cflag">🇦🇪</div>
+            <div class="cinfo">
+              <h4>UAE</h4>
+              <span>Employment Visa</span>
+            </div>
+            <!-- <span class="cpri pri-h">Priority</span> -->
+          </div>
+          <div class="cc reveal d3">
+            <div class="cflag">🇬🇧</div>
+            <div class="cinfo">
+              <h4>United Kingdom</h4>
+              <span>Skilled Worker</span>
+            </div>
+            <!-- <span class="cpri pri-h">Priority</span> -->
+          </div>
+          <div class="cc reveal">
+            <div class="cflag">🇮🇪</div>
+            <div class="cinfo">
+              <h4>Ireland</h4>
+              <span>Critical Skills</span>
+            </div>
+            <!-- <span class="cpri pri-m">Open</span> -->
+          </div>
+          <div class="cc reveal d1">
+            <div class="cflag">🇦🇺</div>
+            <div class="cinfo">
+              <h4>Australia</h4>
+              <span>TSS 482 Visa</span>
+            </div>
+            <!-- <span class="cpri pri-h">Priority</span> -->
+          </div>
+          <div class="cc reveal d2">
+            <div class="cflag">🇳🇿</div>
+            <div class="cinfo">
+              <h4>New Zealand</h4>
+              <span>Accredited Employer</span>
+            </div>
+            <!-- <span class="cpri pri-m">Open</span> -->
+          </div>
+          <div class="cc reveal d3">
+            <div class="cflag">🇳🇱</div>
+            <div class="cinfo">
+              <h4>Netherlands</h4>
+              <span>Highly Skilled Migrant</span>
+            </div>
+            <!-- <span class="cpri pri-m">Open</span> -->
+          </div>
+          <div class="cc reveal">
+            <div class="cflag">🇸🇪</div>
+            <div class="cinfo">
+              <h4>Sweden</h4>
+              <span>Work Permit</span>
+            </div>
+            <!-- <span class="cpri pri-m">Open</span> -->
+          </div>
+          <div class="cc reveal d1">
+            <div class="cflag">🇩🇰</div>
+            <div class="cinfo">
+              <h4>Denmark</h4>
+              <span>Fast-Track Scheme</span>
+            </div>
+            <!-- <span class="cpri pri-m">Open</span> -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="si">
+        <div class="ct-inner">
+          <p class="stag" style="justify-content: center">Get in Touch</p>
+          <h2 class="stit reveal">
+            Let's talk<br /><em>about your project.</em>
+          </h2>
+          <p class="reveal">
+            Whether you have a senior SAP ABAP role, an IS-U programme that
+            needs a specialist, or just want to explore - I would love to hear
+            from you. Available for interviews across all time zones.
+          </p>
+          <div class="ct-links reveal">
+            <a href="mailto:shitkalankita@gmail.com" class="ctlnk"
+              >✉️ &nbsp;shitkalankita@gmail.com</a
+            >
+            <a
+              href="www.linkedin.com/in/ankita-shitkal-sap"
+              class="ctlnk"
+              target="_blank"
+              >💼 &nbsp;LinkedIn</a
+            >
+            <!--<a
+              href="https://github.com/your-handle"
+              class="ctlnk"
+              target="_blank"
+              >🐙 &nbsp;GitHub</a
+            >-->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>
+        Crafted with precision by <span>Ankita</span> &nbsp;·&nbsp; Senior SAP
+        ABAP Developer &nbsp;·&nbsp; Open to International Relocation
+      </p>
+    </footer>
+
+    <script>
+      // Canvas
+      const canvas = document.getElementById("bgc"),
+        ctx = canvas.getContext("2d");
+      let W, H;
+      function rs() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      rs();
+      window.addEventListener("resize", rs);
+      const nodes = Array.from({ length: 55 }, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 2 + 0.5,
+        op: Math.random() * 0.4 + 0.15,
+      }));
+      const pts = Array.from({ length: 25 }, () => ({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        sz: Math.random() * 1.5 + 0.3,
+        vy: -(Math.random() * 0.4 + 0.1),
+        op: Math.random() * 0.3 + 0.1,
+        life: Math.random() * 100,
+      }));
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (let i = 0; i < nodes.length; i++)
+          for (let j = i + 1; j < nodes.length; j++) {
+            const dx = nodes[i].x - nodes[j].x,
+              dy = nodes[i].y - nodes[j].y,
+              d = Math.sqrt(dx * dx + dy * dy);
+            if (d < 140) {
+              ctx.beginPath();
+              ctx.strokeStyle = `rgba(201,168,76,${0.1 * (1 - d / 140)})`;
+              ctx.lineWidth = 0.5;
+              ctx.moveTo(nodes[i].x, nodes[i].y);
+              ctx.lineTo(nodes[j].x, nodes[j].y);
+              ctx.stroke();
+            }
+          }
+        nodes.forEach((n) => {
+          n.x += n.vx;
+          n.y += n.vy;
+          if (n.x < 0 || n.x > W) n.vx *= -1;
+          if (n.y < 0 || n.y > H) n.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(201,168,76,${n.op})`;
+          ctx.fill();
+        });
+        pts.forEach((p) => {
+          p.life++;
+          p.y += p.vy;
+          p.op = Math.sin(p.life * 0.02) * 0.25 + 0.08;
+          if (p.y < -10) {
+            p.y = H + 10;
+            p.x = Math.random() * W;
+          }
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(100,255,218,${p.op})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+
+      // Cursor
+      const cur = document.getElementById("cur"),
+        ring = document.getElementById("ring");
+      let cx = 0,
+        cy = 0,
+        rx = 0,
+        ry = 0;
+      document.addEventListener("mousemove", (e) => {
+        cx = e.clientX;
+        cy = e.clientY;
+        cur.style.left = cx + "px";
+        cur.style.top = cy + "px";
+      });
+      function ar() {
+        rx += (cx - rx) * 0.12;
+        ry += (cy - ry) * 0.12;
+        ring.style.left = rx + "px";
+        ring.style.top = ry + "px";
+        requestAnimationFrame(ar);
+      }
+      ar();
+      document
+        .querySelectorAll("a,button,.tag,.cert,.ach,.cc,.hlc")
+        .forEach((el) => {
+          el.addEventListener("mouseenter", () => {
+            cur.classList.add("h");
+            ring.classList.add("h");
+          });
+          el.addEventListener("mouseleave", () => {
+            cur.classList.remove("h");
+            ring.classList.remove("h");
+          });
+        });
+
+      // Nav scroll + progress
+      const nav = document.getElementById("nav"),
+        pb = document.getElementById("pb");
+      window.addEventListener("scroll", () => {
+        nav.classList.toggle("sc", window.scrollY > 60);
+        pb.style.width =
+          (window.scrollY / (document.body.scrollHeight - window.innerHeight)) *
+            100 +
+          "%";
+        // Active nav
+        let cur2 = "";
+        document.querySelectorAll("section[id]").forEach((s) => {
+          if (window.scrollY >= s.offsetTop - 150) cur2 = s.id;
+        });
+        document.querySelectorAll(".nav-links a").forEach((a) => {
+          a.classList.toggle("active", a.getAttribute("href") === "#" + cur2);
+        });
+      });
+
+      // Mobile menu
+      const ham = document.getElementById("ham"),
+        mob = document.getElementById("mob");
+      ham.addEventListener("click", () => {
+        ham.classList.toggle("open");
+        mob.classList.toggle("open");
+      });
+      function cm() {
+        ham.classList.remove("open");
+        mob.classList.remove("open");
+      }
+
+      // Reveal on scroll
+      const obs = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting) e.target.classList.add("visible");
+          }),
+        { threshold: 0.1 },
+      );
+      document
+        .querySelectorAll(".reveal,.tli")
+        .forEach((el) => obs.observe(el));
+
+      // Counter animation
+      const cobs = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (e.isIntersecting && !e.target.dataset.done) {
+              e.target.dataset.done = "1";
+              const t = parseInt(e.target.dataset.t),
+                pfx = e.target.dataset.pfx || "",
+                sfx = e.target.dataset.sfx || "";
+              let c = 0;
+              const step = t / 40;
+              const tm = setInterval(() => {
+                c = Math.min(c + step, t);
+                e.target.textContent = pfx + Math.round(c) + sfx;
+                if (c >= t) clearInterval(tm);
+              }, 35);
+            }
+          }),
+        { threshold: 0.5 },
+      );
+      document
+        .querySelectorAll(".stat-num[data-t]")
+        .forEach((el) => cobs.observe(el));
+    </script>
+  </body>
+</html>
